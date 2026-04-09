@@ -1,0 +1,53 @@
+/* SDS handles most theming. Minimal custom styles. */
+
+body {
+  font-family: var(--font-inter), "Inter", sans-serif;
+  color: var(--sds-clr-gray-12);
+  background: var(--sds-clr-gray-01);
+}
+
+code,
+pre,
+.mono {
+  font-family: var(--font-inconsolata), "Inconsolata", monospace;
+}
+
+/* Nav links in header */
+.NavLinks {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+}
+
+.NavLinks a {
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 0.875rem;
+  color: var(--sds-clr-gray-11);
+  transition: color 0.15s;
+}
+
+.NavLinks a:hover {
+  color: var(--sds-clr-gray-12);
+}
+
+.NavLinks a.NavLinks__active {
+  color: var(--sds-clr-gray-12);
+  border-bottom: 2px solid currentColor;
+  padding-bottom: 2px;
+}
+
+
+/* Page placeholders */
+.page-placeholder {
+  padding: 2rem 0;
+}
+
+.page-placeholder h1 {
+  margin-bottom: 0.5rem;
+}
+
+.page-placeholder p {
+  color: var(--sds-clr-gray-11);
+  margin-bottom: 0.5rem;
+}

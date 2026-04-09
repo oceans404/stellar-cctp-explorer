@@ -1,0 +1,29 @@
+{
+  "name": "explorer",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
+  },
+  "dependencies": {
+    "@noble/curves": "^2.0.1",
+    "@noble/hashes": "^2.0.1",
+    "@stellar/design-system": "^3.2.8",
+    "@stellar/stellar-sdk": "^15.0.1",
+    "@tanstack/react-query": "^5.96.2",
+    "bs58": "^6.0.0",
+    "next": "16.2.3",
+    "react": "19.2.4",
+    "react-dom": "19.2.4",
+    "sass": "^1.99.0",
+    "viem": "^2.47.10"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "typescript": "^5"
+  }
+}
