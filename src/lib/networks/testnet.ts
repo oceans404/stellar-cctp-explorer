@@ -94,6 +94,19 @@ export const testnetConfig: NetworkConfig = {
       enabled: true,
     },
     
+    "arc-testnet": {
+      type: "evm",
+      name: "Arc Testnet",
+      slug: "arc-testnet",
+      domain: 26,
+      chainId: 5042002,
+      rpcUrl: "https://rpc.testnet.arc.network",
+      tokenMessengerV2: "0x8FE6B999Dc680CcFDD5Bf7EB0974218be2542DAA",
+      messageTransmitterV2: "0xe737e5cebeeba77efe34d4aa090756590b1ce275",
+      usdcAddress: "0x3600000000000000000000000000000000000000",
+      explorerUrl: "https://testnet.arcscan.app",
+      enabled: true,
+    },
     "polygon-amoy": {
       type: "evm",
       name: "Polygon Amoy",

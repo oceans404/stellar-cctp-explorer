@@ -14,6 +14,7 @@ export const DOMAIN_NAMES: Record<number, string> = {
   6: "Base",
   7: "Polygon",
   8: "Sui",
+  26: "Arc",
   27: "Stellar",
 };
 
