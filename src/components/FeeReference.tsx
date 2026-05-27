@@ -365,14 +365,6 @@ export function FeeReference() {
   const inboundRows = useMemo(() => buildRouteRows("inbound", liveFees), [liveFees]);
   const outboundRows = useMemo(() => buildRouteRows("outbound", liveFees), [liveFees]);
 
-  if (network === "mainnet") {
-    return (
-      <Alert variant="primary" placement="inline">
-        Mainnet fee data is not yet available. Switch to Testnet to view current CCTP fee schedules.
-      </Alert>
-    );
-  }
-
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
       {fetchError && (

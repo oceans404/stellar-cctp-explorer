@@ -26,7 +26,7 @@ export function RecentTransactions() {
   return (
     <Card>
       <h3 style={{ margin: "0 0 0.75rem", fontSize: "1rem", fontWeight: 600, color: "var(--sds-clr-gray-12)" }}>
-        Recent Stellar CCTP Transfers
+        Recent Stellar CCTP Transfers (All Chains)
       </h3>
 
       {isLoading && (

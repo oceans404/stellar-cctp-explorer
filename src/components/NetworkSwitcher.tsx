@@ -15,8 +15,8 @@ export function NetworkSwitcher() {
         value={network}
         onChange={(e) => setNetwork(e.target.value as NetworkName)}
       >
+        <option value="mainnet">Mainnet</option>
         <option value="testnet">Testnet</option>
-        <option value="mainnet" disabled>Mainnet (coming soon)</option>
       </Select>
     </div>
   );

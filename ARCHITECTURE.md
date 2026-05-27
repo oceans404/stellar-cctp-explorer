@@ -209,12 +209,14 @@ Note: Iris does **not** return the source burn transaction hash in either query 
 
 ### Chain RPCs
 
+RPC URLs come from `getNetworkConfig(network)` and resolve per-chain via `{SLUG}_RPC_URL` env vars (see [README.md](./README.md#rpc-configuration) and `.env.example`).
+
 | Chain | RPC | Endpoints used |
 |-------|-----|---------------|
-| EVM | JSON-RPC (e.g., `sepolia.base.org`) | `eth_getTransactionReceipt`, `eth_getBlockByNumber`, `eth_call`, `eth_blockNumber`, `eth_getLogs` |
-| Stellar | Soroban RPC (e.g., `soroban-testnet.stellar.org`) | `getTransaction`, `simulateTransaction`, `getEvents`, `getLatestLedger` |
-| Stellar | Horizon (e.g., `horizon-testnet.stellar.org`) | `GET /accounts/{id}/operations` — used as fallback for burn tx lookup when Soroban event retention window is exceeded |
-| Solana | JSON-RPC (e.g., `api.devnet.solana.com`) | `getTransaction`, `getAccountInfo`, `getSignaturesForAddress` |
+| EVM | JSON-RPC | `eth_getTransactionReceipt`, `eth_getBlockByNumber`, `eth_call`, `eth_blockNumber`, `eth_getLogs` |
+| Stellar | Soroban RPC | `getTransaction`, `simulateTransaction`, `getEvents`, `getLatestLedger` |
+| Stellar | Horizon | `GET /accounts/{id}/operations` — fallback for burn tx lookup when the Soroban event retention window is exceeded |
+| Solana | JSON-RPC | `getTransaction`, `getAccountInfo`, `getSignaturesForAddress` |
 
 ## CCTP Message Format
 

@@ -16,7 +16,11 @@ export function getNetworkConfig(network: NetworkName): NetworkConfig {
 
   const config = applyEnvOverrides(configs[network]);
 
-  if (config.enabled) {
+  // RPC URL validation runs server-side only. Env vars aren't NEXT_PUBLIC_
+  // prefixed (by design, see env-overrides.ts), so the client never sees
+  // them and would always throw here. Server callers still get an eager
+  // check; client code reads config for metadata and never touches rpcUrl.
+  if (typeof window === "undefined" && config.enabled) {
     for (const [slug, chain] of Object.entries(config.chains)) {
       if (!chain.enabled) continue;
       if (!chain.rpcUrl || chain.rpcUrl.length === 0) {
@@ -38,7 +42,7 @@ export function isValidNetwork(value: string): value is NetworkName {
 function resolveDefaultNetwork(): NetworkName {
   const fromEnv = process.env.NEXT_PUBLIC_DEFAULT_NETWORK;
   if (fromEnv && isValidNetwork(fromEnv)) return fromEnv;
-  return "testnet";
+  return "mainnet";
 }
 
 export const DEFAULT_NETWORK: NetworkName = resolveDefaultNetwork();
