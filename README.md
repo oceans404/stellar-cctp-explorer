@@ -27,6 +27,42 @@ pnpm dev
 
 Open [http://localhost:3000](http://localhost:3000).
 
+## RPC Configuration
+
+Each chain's RPC URL can be overridden via environment variable. The variable name is the chain slug, uppercased, with hyphens converted to underscores, suffixed with `_RPC_URL`. Use this to inject paid endpoint URLs (Alchemy, Infura, QuickNode, Helius) without committing keys to the repo.
+
+Overrides are server-side only — there is no `NEXT_PUBLIC_` prefix, so RPC URLs containing API keys do not leak into the client bundle.
+
+If a network is `enabled: true` and any enabled chain has an empty `rpcUrl` after override resolution, the app throws at first API call with the missing env var name.
+
+Testnet:
+
+- `STELLAR_TESTNET_RPC_URL`
+- `SOLANA_DEVNET_RPC_URL`
+- `BASE_SEPOLIA_RPC_URL`
+- `ETHEREUM_SEPOLIA_RPC_URL`
+- `AVALANCHE_FUJI_RPC_URL`
+- `OP_SEPOLIA_RPC_URL`
+- `ARBITRUM_SEPOLIA_RPC_URL`
+- `ARC_TESTNET_RPC_URL`
+- `POLYGON_AMOY_RPC_URL`
+
+Mainnet:
+
+- `ETHEREUM_RPC_URL`
+- `AVALANCHE_RPC_URL`
+- `OPTIMISM_RPC_URL`
+- `ARBITRUM_RPC_URL`
+- `SOLANA_RPC_URL`
+- `BASE_RPC_URL`
+- `POLYGON_RPC_URL`
+- `ARC_RPC_URL`
+- `STELLAR_RPC_URL`
+
+Also supported:
+
+- `NEXT_PUBLIC_DEFAULT_NETWORK` — set to `testnet` or `mainnet` to control the default network on first page load.
+
 ## Architecture
 
 See [ARCHITECTURE.md](./ARCHITECTURE.md) for detailed documentation on:

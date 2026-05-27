@@ -23,6 +23,13 @@ export async function GET(request: Request) {
 
   const config = getNetworkConfig(networkParam);
 
+  if (!config.enabled) {
+    return Response.json(
+      { error: "Network not yet enabled" },
+      { status: 503 }
+    );
+  }
+
   // Fetch live fees from Iris for all Stellar route pairs
   const apiFees = await fetchAllStellarRouteFees(config.irisApiBase);
 

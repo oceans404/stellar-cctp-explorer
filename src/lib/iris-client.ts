@@ -1,23 +1,28 @@
-import type { NetworkConfig, AttestationInfo, NonceLookupResult } from "./types";
+import type { NetworkConfig, NetworkName, AttestationInfo, NonceLookupResult } from "./types";
 
 // ---------------------------------------------------------------------------
-// Token bucket rate limiter (25 req/s budget)
+// Token bucket rate limiter (25 req/s budget, per network)
 // ---------------------------------------------------------------------------
 
 const BUCKET_CAPACITY = 25;
 const REFILL_RATE = 25; // tokens per second
 
-let tokens = BUCKET_CAPACITY;
-let lastRefill = Date.now();
+const buckets = new Map<NetworkName, { tokens: number; lastRefill: number }>();
 
-function acquireToken(): boolean {
+function acquireToken(network: NetworkName): boolean {
+  let bucket = buckets.get(network);
+  if (!bucket) {
+    bucket = { tokens: BUCKET_CAPACITY, lastRefill: Date.now() };
+    buckets.set(network, bucket);
+  }
+
   const now = Date.now();
-  const elapsed = (now - lastRefill) / 1000;
-  tokens = Math.min(BUCKET_CAPACITY, tokens + elapsed * REFILL_RATE);
-  lastRefill = now;
+  const elapsed = (now - bucket.lastRefill) / 1000;
+  bucket.tokens = Math.min(BUCKET_CAPACITY, bucket.tokens + elapsed * REFILL_RATE);
+  bucket.lastRefill = now;
 
-  if (tokens >= 1) {
-    tokens -= 1;
+  if (bucket.tokens >= 1) {
+    bucket.tokens -= 1;
     return true;
   }
   return false;
@@ -56,7 +61,7 @@ export async function fetchAttestation(
   const cached = getCached(cacheKey);
   if (cached) return cached;
 
-  if (!acquireToken()) {
+  if (!acquireToken(config.id)) {
     return { found: false, detail: "Rate limited — try again in a moment" };
   }
 
@@ -146,7 +151,7 @@ export async function fetchMessageByNonce(
   sourceDomain: number,
   nonce: string,
 ): Promise<NonceLookupResult> {
-  if (!acquireToken()) {
+  if (!acquireToken(config.id)) {
     return { found: false, detail: "Rate limited — try again in a moment" };
   }
 

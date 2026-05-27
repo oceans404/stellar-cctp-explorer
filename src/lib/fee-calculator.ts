@@ -23,7 +23,7 @@ export const CHAIN_FEES: ChainFeeConfig[] = [
   },
   {
     domain: 2,
-    name: "OP Mainnet",
+    name: "Optimism",
     fastFeeBps: 1.3,
     standardTime: "~15-20 minutes",
     fastTime: "~4 seconds",
@@ -55,7 +55,7 @@ export const CHAIN_FEES: ChainFeeConfig[] = [
   },
   {
     domain: 7,
-    name: "Polygon PoS",
+    name: "Polygon",
     fastFeeBps: null,
     standardTime: "~8 minutes",
     fastTime: null,

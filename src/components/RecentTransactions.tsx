@@ -13,8 +13,8 @@ export function RecentTransactions() {
 
   const { data, isLoading } = useQuery<{ txs: RecentBurnTx[] }>({
     queryKey: ["recent-txs", network],
-    queryFn: async () => {
-      const res = await fetch(`/api/recent-txs?network=${network}`);
+    queryFn: async ({ signal }) => {
+      const res = await fetch(`/api/recent-txs?network=${network}`, { signal });
       return res.json();
     },
     refetchInterval: 30_000,

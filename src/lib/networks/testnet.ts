@@ -3,6 +3,7 @@ import type { NetworkConfig } from "../types";
 export const testnetConfig: NetworkConfig = {
   id: "testnet",
   label: "Testnet",
+  enabled: true,
   chains: {
     "stellar-testnet": {
       type: "stellar",
@@ -10,6 +11,7 @@ export const testnetConfig: NetworkConfig = {
       slug: "stellar-testnet",
       domain: 27,
       rpcUrl: "https://soroban-testnet.stellar.org",
+      horizonUrl: "https://horizon-testnet.stellar.org",
       networkPassphrase: "Test SDF Network ; September 2015",
       tokenMessengerMinter: "CDNG7HXAPBWICI2E3AUBP3YZWZELJLYSB6F5CC7WLDTLTHVM74SLRTHP",
       messageTransmitter: "CBJ6MTCKKZG73PMDZCJMSFRD7DQEMI4FKDH7CGDSV4W6FHCRBCQAVVJY",
@@ -40,6 +42,8 @@ export const testnetConfig: NetworkConfig = {
       usdcAddress: "0x036CbD53842c5426634e7929541eC2318f3dCF7e",
       explorerUrl: "https://sepolia.basescan.org",
       enabled: true,
+      burnSearchBlocks: 300_000,
+      relaySearchBlocks: 10_000,
     },
     "ethereum-sepolia": {
       type: "evm",
@@ -53,6 +57,8 @@ export const testnetConfig: NetworkConfig = {
       usdcAddress: "0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238",
       explorerUrl: "https://sepolia.etherscan.io",
       enabled: true,
+      burnSearchBlocks: 50_000,
+      relaySearchBlocks: 1_800,
     },
     "avalanche-fuji": {
       type: "evm",
@@ -66,6 +72,8 @@ export const testnetConfig: NetworkConfig = {
       usdcAddress: "0x5425890298aed601595a70AB815c96711a31Bc65",
       explorerUrl: "https://testnet.snowtrace.io",
       enabled: true,
+      burnSearchBlocks: 200_000,
+      relaySearchBlocks: 8_000,
     },
     "op-sepolia": {
       type: "evm",
@@ -79,6 +87,8 @@ export const testnetConfig: NetworkConfig = {
       usdcAddress: "0x5fd84259d66Cd46123540766Be93DFE6D43130D7",
       explorerUrl: "https://sepolia-optimism.etherscan.io",
       enabled: true,
+      burnSearchBlocks: 300_000,
+      relaySearchBlocks: 10_000,
     },
     "arbitrum-sepolia": {
       type: "evm",
@@ -92,8 +102,10 @@ export const testnetConfig: NetworkConfig = {
       usdcAddress: "0x75faf114eafb1BDbe2F0316DF893fd58CE46AA4d",
       explorerUrl: "https://sepolia.arbiscan.io",
       enabled: true,
+      burnSearchBlocks: 2_400_000,
+      relaySearchBlocks: 100_000,
     },
-    
+
     "arc-testnet": {
       type: "evm",
       name: "Arc Testnet",
@@ -106,6 +118,8 @@ export const testnetConfig: NetworkConfig = {
       usdcAddress: "0x3600000000000000000000000000000000000000",
       explorerUrl: "https://testnet.arcscan.app",
       enabled: true,
+      burnSearchBlocks: 100_000,
+      relaySearchBlocks: 4_000,
     },
     "polygon-amoy": {
       type: "evm",
@@ -119,6 +133,8 @@ export const testnetConfig: NetworkConfig = {
       usdcAddress: "0x41E94Eb019C0762f9Bfcf9Fb1E58725BfB0e7582",
       explorerUrl: "https://amoy.polygonscan.com",
       enabled: true,
+      burnSearchBlocks: 200_000,
+      relaySearchBlocks: 8_000,
     },
     
   },

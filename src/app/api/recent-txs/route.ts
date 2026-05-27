@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { xdr } from "@stellar/stellar-sdk";
-import { getNetworkConfig } from "@/lib/networks";
+import { getNetworkConfig, isValidNetwork, DEFAULT_NETWORK } from "@/lib/networks";
 import { getStellarChain } from "@/lib/config";
-import type { RecentBurnTx, NetworkName } from "@/lib/types";
+import type { RecentBurnTx } from "@/lib/types";
 
 // ---------------------------------------------------------------------------
 // Cache (30s TTL per network)
@@ -198,7 +198,14 @@ async function fetchRecentStellarActivity(
 // ---------------------------------------------------------------------------
 
 export async function GET(request: NextRequest) {
-  const network = (request.nextUrl.searchParams.get("network") ?? "testnet") as NetworkName;
+  const networkParam = request.nextUrl.searchParams.get("network") ?? DEFAULT_NETWORK;
+  if (!isValidNetwork(networkParam)) {
+    return NextResponse.json(
+      { txs: [], error: `Invalid network: ${networkParam}` },
+      { status: 400 },
+    );
+  }
+  const network = networkParam;
 
   const cacheKey = `recent:${network}`;
   const cached = cache.get(cacheKey);
@@ -211,6 +218,14 @@ export async function GET(request: NextRequest) {
 
   try {
     const config = getNetworkConfig(network);
+
+    if (!config.enabled) {
+      return NextResponse.json(
+        { txs: [], error: "Network not yet enabled" },
+        { status: 503 },
+      );
+    }
+
     const stellar = getStellarChain(config);
     if (!stellar) {
       return NextResponse.json({ txs: [] });

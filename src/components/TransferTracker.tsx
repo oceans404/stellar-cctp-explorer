@@ -19,9 +19,10 @@ interface TransferTrackerProps {
 async function fetchTransferStatus(
   sourceDomain: number,
   txHash: string,
-  network: string
+  network: string,
+  signal?: AbortSignal,
 ): Promise<TransferStatus> {
-  const res = await fetch(`/api/transfer/${sourceDomain}/${txHash}?network=${network}`);
+  const res = await fetch(`/api/transfer/${sourceDomain}/${txHash}?network=${network}`, { signal });
 
   if (res.status === 404) {
     const body = await res.json();
@@ -122,7 +123,7 @@ function TransferTrackerInner({
 
   const { data, error, isLoading, isFetching } = useQuery<TransferStatus, Error>({
     queryKey: ["transfer", network, sourceDomain, txHash],
-    queryFn: () => fetchTransferStatus(sourceDomain, txHash, network),
+    queryFn: ({ signal }) => fetchTransferStatus(sourceDomain, txHash, network, signal),
     refetchInterval: (query) => {
       const fetchCount = query.state.dataUpdateCount;
       return getRefetchInterval(query.state.data, fetchCount);

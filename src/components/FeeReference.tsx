@@ -351,8 +351,8 @@ export function FeeReference() {
     error: fetchError,
   } = useQuery<FeeApiResponse>({
     queryKey: ["fees", network],
-    queryFn: async () => {
-      const res = await fetch(`/api/fees?network=${network}`);
+    queryFn: async ({ signal }) => {
+      const res = await fetch(`/api/fees?network=${network}`, { signal });
       if (!res.ok) throw new Error(`Failed to fetch fees: ${res.status}`);
       return res.json();
     },

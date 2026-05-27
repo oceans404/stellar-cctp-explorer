@@ -5,6 +5,7 @@ import { Layout } from "@stellar/design-system";
 import { NetworkSwitcher } from "./NetworkSwitcher";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useNetwork } from "@/context/network";
 
 export function AppHeader() {
   const [mounted, setMounted] = useState(false);
@@ -35,6 +36,7 @@ export function AppHeader() {
 
 function NavLinks() {
   const pathname = usePathname();
+  const { network } = useNetwork();
 
   const links = [
     { href: "/", label: "Home" },
@@ -50,7 +52,7 @@ function NavLinks() {
         return (
           <Link
             key={href}
-            href={href}
+            href={`${href}?network=${network}`}
             className={isActive ? "NavLinks__active" : undefined}
           >
             {label}

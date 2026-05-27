@@ -48,6 +48,21 @@ export async function GET(
 
   const config = getNetworkConfig(networkParam);
 
+  if (!config.enabled) {
+    return Response.json(
+      { error: "Network not yet enabled" },
+      { status: 503 }
+    );
+  }
+
+  const sourceChain = Object.values(config.chains).find((c) => c.domain === sourceDomain);
+  if (!sourceChain || !sourceChain.enabled) {
+    return Response.json(
+      { error: "Chain not enabled on this network" },
+      { status: 503 }
+    );
+  }
+
   try {
     const status = await getTransferStatus(config, sourceDomain, txHash);
 

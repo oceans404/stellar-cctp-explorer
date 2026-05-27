@@ -28,6 +28,7 @@ async function findEvmBurnTx(
   destDomain: number,
   mintRecipient: Uint8Array,
   amount: bigint,
+  burnSearchBlocks: number,
 ): Promise<string | undefined> {
   const depositorTopic = "0x000000000000000000000000" + depositorAddress.slice(2).toLowerCase();
   const targetRecipientHex = Array.from(mintRecipient).map((b) => b.toString(16).padStart(2, "0")).join("");
@@ -41,11 +42,10 @@ async function findEvmBurnTx(
     });
     const latestBlock = parseInt(((await blockRes.json()) as { result: string }).result, 16);
 
-    // Search last 200k blocks in 10k chunks, newest first (most burns are
-    // recent relative to the relay). 200k blocks ≈ 4.5 days on Base Sepolia
-    // (~2s blocks), ~28 hours on Ethereum Sepolia (~12s blocks). The indexed
-    // depositor topic keeps the search efficient even over large ranges.
-    const searchStart = Math.max(0, latestBlock - 200000);
+    // Window tuned per chain (~7 days of coverage). Chunked at 10k to respect
+    // Alchemy's eth_getLogs cap. The indexed depositor topic keeps the search
+    // efficient even over large ranges.
+    const searchStart = Math.max(0, latestBlock - burnSearchBlocks);
     const CHUNK = 10000;
 
     for (let to = latestBlock; to > searchStart; to -= CHUNK) {
@@ -189,7 +189,8 @@ async function checkEvmNonce(
   rpcUrl: string,
   messageTransmitter: string,
   _sourceDomain: number,
-  nonce: Uint8Array
+  nonce: Uint8Array,
+  relaySearchBlocks: number,
 ): Promise<RelayInfo> {
   try {
     // V2: usedNonces(bytes32) takes the raw nonce directly (no hashing)
@@ -223,7 +224,7 @@ async function checkEvmNonce(
     // If nonce used, find the relay tx hash via event logs
     let relayTxHash: string | undefined;
     if (nonceUsed) {
-      relayTxHash = await findEvmRelayTx(rpcUrl, messageTransmitter, "0x" + nonceHex);
+      relayTxHash = await findEvmRelayTx(rpcUrl, messageTransmitter, "0x" + nonceHex, relaySearchBlocks);
     }
 
     return { checked: true, nonceUsed, relayTxHash };
@@ -236,10 +237,10 @@ async function checkEvmNonce(
 async function findEvmRelayTx(
   rpcUrl: string,
   messageTransmitter: string,
-  nonce: string
+  nonce: string,
+  relaySearchBlocks: number,
 ): Promise<string | undefined> {
   try {
-    // Get latest block to set search range
     const blockRes = await fetch(rpcUrl, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -247,29 +248,37 @@ async function findEvmRelayTx(
     });
     const latestBlock = parseInt(((await blockRes.json()) as { result: string }).result, 16);
 
-    // Search last 10k blocks (relay typically happens within minutes/hours of attestation)
-    const fromBlock = Math.max(0, latestBlock - 10000);
-    const logsRes = await fetch(rpcUrl, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        jsonrpc: "2.0",
-        id: 2,
-        method: "eth_getLogs",
-        params: [{
-          address: messageTransmitter,
-          topics: [MESSAGE_RECEIVED_TOPIC, null, nonce],
-          fromBlock: "0x" + fromBlock.toString(16),
-          toBlock: "latest",
-        }],
-      }),
-    });
+    // Chunked at 10k blocks per request to respect Alchemy's eth_getLogs cap.
+    // Newest-first so we return as soon as we find the relay.
+    const searchStart = Math.max(0, latestBlock - relaySearchBlocks);
+    const CHUNK = 10000;
 
-    const logsJson = (await logsRes.json()) as { result?: Array<{ transactionHash: string }> };
-    return logsJson.result?.[0]?.transactionHash;
+    for (let to = latestBlock; to > searchStart; to -= CHUNK) {
+      const from = Math.max(searchStart, to - CHUNK + 1);
+      const logsRes = await fetch(rpcUrl, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          jsonrpc: "2.0",
+          id: 2,
+          method: "eth_getLogs",
+          params: [{
+            address: messageTransmitter,
+            topics: [MESSAGE_RECEIVED_TOPIC, null, nonce],
+            fromBlock: "0x" + from.toString(16),
+            toBlock: "0x" + to.toString(16),
+          }],
+        }),
+      });
+
+      const logsJson = (await logsRes.json()) as { result?: Array<{ transactionHash: string }> };
+      const hit = logsJson.result?.[0]?.transactionHash;
+      if (hit) return hit;
+    }
   } catch {
-    return undefined;
+    // Log search failed — non-critical
   }
+  return undefined;
 }
 
 // ---------------------------------------------------------------------------
@@ -334,7 +343,7 @@ export async function getTransferStatus(
     const destChain = Object.values(config.chains).find((c) => c.domain === destDomain);
 
     if (destChain?.type === "evm" && "messageTransmitterV2" in destChain) {
-      relay = await checkEvmNonce(destChain.rpcUrl, destChain.messageTransmitterV2, sourceDomain, nonce);
+      relay = await checkEvmNonce(destChain.rpcUrl, destChain.messageTransmitterV2, sourceDomain, nonce, destChain.relaySearchBlocks);
     } else if (destChain?.type === "stellar") {
       const nonceHex = ("0x" + Array.from(nonce).map((b) => b.toString(16).padStart(2, "0")).join("")) as `0x${string}`;
       relay = await simulateIsNonceUsed(config, nonceHex, nonce);
@@ -443,6 +452,7 @@ async function resolveFromRelay(
         decoded.header.destinationDomain,
         decoded.body.mintRecipient,
         decoded.body.amount,
+        sourceChain.burnSearchBlocks,
       );
     } catch {
       // Non-critical — burn tx lookup is best-effort

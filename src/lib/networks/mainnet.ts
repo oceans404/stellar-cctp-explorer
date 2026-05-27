@@ -5,6 +5,7 @@ import type { NetworkConfig } from "../types";
 export const mainnetConfig: NetworkConfig = {
   id: "mainnet",
   label: "Mainnet",
+  enabled: false,
   chains: {
     ethereum: {
       type: "evm",
@@ -18,6 +19,8 @@ export const mainnetConfig: NetworkConfig = {
       usdcAddress: "0x0000000000000000000000000000000000000000",
       explorerUrl: "https://etherscan.io",
       enabled: false,
+      burnSearchBlocks: 50_000,
+      relaySearchBlocks: 1_800,
     },
     avalanche: {
       type: "evm",
@@ -31,6 +34,8 @@ export const mainnetConfig: NetworkConfig = {
       usdcAddress: "0x0000000000000000000000000000000000000000",
       explorerUrl: "https://snowtrace.io",
       enabled: false,
+      burnSearchBlocks: 200_000,
+      relaySearchBlocks: 8_000,
     },
     optimism: {
       type: "evm",
@@ -44,6 +49,8 @@ export const mainnetConfig: NetworkConfig = {
       usdcAddress: "0x0000000000000000000000000000000000000000",
       explorerUrl: "https://optimistic.etherscan.io",
       enabled: false,
+      burnSearchBlocks: 300_000,
+      relaySearchBlocks: 10_000,
     },
     arbitrum: {
       type: "evm",
@@ -57,6 +64,8 @@ export const mainnetConfig: NetworkConfig = {
       usdcAddress: "0x0000000000000000000000000000000000000000",
       explorerUrl: "https://arbiscan.io",
       enabled: false,
+      burnSearchBlocks: 2_400_000,
+      relaySearchBlocks: 100_000,
     },
     solana: {
       type: "solana",
@@ -80,6 +89,8 @@ export const mainnetConfig: NetworkConfig = {
       usdcAddress: "0x0000000000000000000000000000000000000000",
       explorerUrl: "https://basescan.org",
       enabled: false,
+      burnSearchBlocks: 300_000,
+      relaySearchBlocks: 10_000,
     },
     polygon: {
       type: "evm",
@@ -93,6 +104,8 @@ export const mainnetConfig: NetworkConfig = {
       usdcAddress: "0x0000000000000000000000000000000000000000",
       explorerUrl: "https://polygonscan.com",
       enabled: false,
+      burnSearchBlocks: 200_000,
+      relaySearchBlocks: 8_000,
     },
     arc: {
       type: "evm",
@@ -106,6 +119,8 @@ export const mainnetConfig: NetworkConfig = {
       usdcAddress: "0x0000000000000000000000000000000000000000",
       explorerUrl: "https://arcscan.app",
       enabled: false,
+      burnSearchBlocks: 100_000,
+      relaySearchBlocks: 4_000,
     },
     stellar: {
       type: "stellar",
@@ -113,6 +128,7 @@ export const mainnetConfig: NetworkConfig = {
       slug: "stellar",
       domain: 27,
       rpcUrl: "",
+      horizonUrl: "https://horizon.stellar.org",
       networkPassphrase: "Public Global Stellar Network ; September 2015",
       tokenMessengerMinter: "",
       messageTransmitter: "",

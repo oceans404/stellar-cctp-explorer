@@ -453,11 +453,7 @@ async function findBurnTxViaHorizon(
 
   const targetMsg = Buffer.from(cctpMessage);
 
-  // Derive the Horizon base URL from the Soroban RPC URL
-  const isTestnet = stellar.rpcUrl.includes("testnet");
-  const horizonBase = isTestnet
-    ? "https://horizon-testnet.stellar.org"
-    : "https://horizon.stellar.org";
+  const horizonBase = stellar.horizonUrl;
 
   try {
     const url = `${horizonBase}/accounts/${senderAddress}/operations?order=desc&limit=50&include_failed=false`;

@@ -45,7 +45,11 @@ export function chainSlugToDomain(config: NetworkConfig, slug: string): number {
 }
 
 export function domainToChainSlug(config: NetworkConfig, domain: number): string | null {
-  const entry = Object.entries(config.chains).find(([, c]) => c.domain === domain);
+  // Filter on enabled so callers (e.g. burn/relay link rendering) don't
+  // produce hrefs to chains that aren't live on this network.
+  const entry = Object.entries(config.chains).find(
+    ([, c]) => c.domain === domain && c.enabled,
+  );
   return entry ? entry[0] : null;
 }
 

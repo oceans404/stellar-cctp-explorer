@@ -14,6 +14,8 @@ export interface EvmChainConfig {
   usdcAddress: `0x${string}`;
   explorerUrl: string;
   enabled: boolean;
+  burnSearchBlocks: number;
+  relaySearchBlocks: number;
 }
 
 export interface StellarChainConfig {
@@ -22,6 +24,7 @@ export interface StellarChainConfig {
   slug: string;
   domain: number;
   rpcUrl: string;
+  horizonUrl: string;
   networkPassphrase: string;
   tokenMessengerMinter: string;
   messageTransmitter: string;
@@ -51,6 +54,7 @@ export type ChainConfig = EvmChainConfig | StellarChainConfig | SolanaChainConfi
 export interface NetworkConfig {
   id: NetworkName;
   label: string;
+  enabled: boolean;
   chains: Record<string, ChainConfig>;
   irisApiBase: string;
 }
