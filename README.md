@@ -2,7 +2,7 @@
 
 A cross-chain USDC transfer explorer for Circle's [Cross-Chain Transfer Protocol](https://www.circle.com/cross-chain-transfer-protocol). Track the full lifecycle of any CCTP transfer: **Burn -> Attestation -> Relay**.
 
-Live on mainnet as of 2026-05-27 across Stellar, Ethereum, Avalanche, Optimism, Arbitrum, Base, Polygon, and Solana. Arc is wired but disabled pending Circle's mainnet contracts. Testnet stays available via the network switcher.
+Live on mainnet as of 2026-05-27 across Stellar, Ethereum, Avalanche, Optimism, Arbitrum, Base, Polygon, Solana, Unichain, Linea, Sonic, World Chain, Sei, and Ink. Arc is wired but disabled pending Circle's mainnet contracts. Testnet stays available via the network switcher.
 
 ## Features
 
@@ -38,7 +38,7 @@ The full set of vars (mainnet and testnet) lives in [`.env.example`](./.env.exam
 
 ## Production / operations
 
-- **Paid RPCs.** Set the 8 mainnet `{SLUG}_RPC_URL` vars in Vercel to paid endpoints (Alchemy, Helius, Validation Cloud, etc.). Public endpoints rate-limit under any real load.
+- **Paid RPCs.** Set the 14 mainnet `{SLUG}_RPC_URL` vars in Vercel to paid endpoints (Alchemy, Helius, Validation Cloud, etc.). Public endpoints rate-limit under any real load.
 - **Pending chains.** Arc is wired with `enabled: false` and zero-address placeholders; flip on once Circle publishes Arc mainnet contracts + USDC and confirm chainId `18233`. Noble (domain 4) is absent from both configs by design; `DOMAIN_NAMES` still labels it.
 - **Iris auth.** No prod API key wired today. Add one only if we hit the 25 req/s shared-tier ceiling. The field is not yet on `NetworkConfig`.
 - **Rollback.** `cctp/` is not under git. Use Vercel's "Promote previous deployment" to roll back, or flip `enabled: false` on `mainnetConfig` (or per chain) in a follow-up commit.

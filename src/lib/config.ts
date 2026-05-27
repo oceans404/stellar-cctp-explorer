@@ -14,6 +14,12 @@ export const DOMAIN_NAMES: Record<number, string> = {
   6: "Base",
   7: "Polygon",
   8: "Sui",
+  10: "Unichain",
+  11: "Linea",
+  13: "Sonic",
+  14: "World Chain",
+  16: "Sei",
+  21: "Ink",
   26: "Arc",
   27: "Stellar",
 };
